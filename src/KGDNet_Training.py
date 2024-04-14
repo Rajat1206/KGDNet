@@ -17,11 +17,12 @@ from dataloader import get_ehr_data
 resume_path = ''
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--test', action='store_true', default=False, help="test mode")
-parser.add_argument('--batch_size', type=int, default=32, help='batch_size')
-parser.add_argument('--embed_dim', type=int, default=64, help='embedding dimension size')
+parser.add_argument('--test', action='store_true', default=False, help='Test mode')
+parser.add_argument('--lr', type=int, default=32, help='Set the learning rate')
+parser.add_argument('--batch_size', type=int, default=32, help='Set the batch size')
+parser.add_argument('--embed_dim', type=int, default=64, help='Embedding dimension size')
 parser.add_argument('--ddi_thresh', type=float, default=0.08, help="Set DDI threshold")
-parser.add_argument('--resume_path', type=str, default=resume_path, help='resume path')
+parser.add_argument('--resume_path', type=str, default=resume_path, help='Resume path')
 args = parser.parse_args()
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -50,7 +51,7 @@ def main():
     test(model, ehr_test, patient_info_test, ddi_KG, ddi_adj, args.ddi_thresh, device)
     return
 
-  optimizer = optim.RMSprop(model.parameters(), lr=2e-4, weight_decay=1e-4, alpha=0.995)
+  optimizer = optim.RMSprop(model.parameters(), lr=args.lr, weight_decay=1e-4, alpha=0.995)
 
   num_epochs = 100
 

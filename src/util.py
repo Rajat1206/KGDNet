@@ -93,15 +93,14 @@ def eval(model, ehr_eval, patient_info_eval, ddi_KG, ddi_adj, ddi_thresh, device
     for i in range(num_adm):
       output_numpy = outputs[i][0].cpu().detach().numpy()
       ground_truth_numpy = ground_truths[i].cpu().detach().numpy()
-      weights_numpy = (ground_truth_numpy * 1.75) + 1
 
-      roc_auc += roc_auc_score(ground_truth_numpy, output_numpy, sample_weight=weights_numpy)
-      prauc += average_precision_score(ground_truth_numpy, output_numpy, sample_weight=weights_numpy)
-      f1 += f1_score(ground_truth_numpy, output_thresh[i], sample_weight=weights_numpy, zero_division=0.0)
-      jaccard += jaccard_score(ground_truth_numpy, output_thresh[i], sample_weight=weights_numpy, zero_division=0.0)
+      roc_auc += roc_auc_score(ground_truth_numpy, output_numpy)
+      prauc += average_precision_score(ground_truth_numpy, output_numpy)
+      f1 += f1_score(ground_truth_numpy, output_thresh[i], zero_division=0.0)
+      jaccard += jaccard_score(ground_truth_numpy, output_thresh[i], zero_division=0.0)
 
-      precision += precision_score(ground_truth_numpy, output_thresh[i], sample_weight=weights_numpy, zero_division=0.0)
-      recall += recall_score(ground_truth_numpy, output_thresh[i], sample_weight=weights_numpy, zero_division=0.0)
+      precision += precision_score(ground_truth_numpy, output_thresh[i], zero_division=0.0)
+      recall += recall_score(ground_truth_numpy, output_thresh[i], zero_division=0.0)
 
       cm = confusion_matrix(ground_truth_numpy, output_thresh[i])
       num_meds += cm[0][1] + cm[1][1]
